@@ -141,7 +141,7 @@ function update() {
     );
 
     // check for pressed keys
-    var speed = 5;
+    var speed = 2;
     if (isAnyCursorKeyPressed()) {
         if (cursors.right.isDown) {
             guy.x += speed; // move to the right with 10 pixels
