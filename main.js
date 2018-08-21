@@ -20,6 +20,7 @@ var score = 0;
 var weapon;
 var fireButton;
 var cursors;
+var target;
 
 function preload() {
     // spritesheet - collection of frames
@@ -94,11 +95,11 @@ function create() {
     // rate of fire in milliseconds (higher number means less fired bullets per second)
     weapon.fireRate = 100;
 
-    // give the weapon to the HERO
-    // 1st: the sprite which will use the weapon
-    // X and Y of the weapon relative to the HERO position
-    // 4th: if true the weapon rotates with the HERO
-    weapon.trackSprite(guy, 30, 20, true);
+    // the initial target point for the weapon
+    // sprite faces up, so we pick the point up
+    target = new Phaser.Point();
+    target.y = 0;
+    target.x = guy.x + guy.width / 2;
 
     // register the SPACEBAR as a button to fire the weapon
     fireButton = game.input.keyboard.addKey(Phaser.KeyCode.SPACEBAR);
@@ -143,26 +144,31 @@ function update() {
     // check for pressed keys
     var speed = 2;
     if (isAnyCursorKeyPressed()) {
-        if (cursors.right.isDown) {
-            guy.x += speed; // move to the right with 10 pixels
-            // guy.rotation = 0; // look to the right;
-            // play the registered animation
-            guy.animations.play('walkRight');
-        }
-        if (cursors.left.isDown) {
-            guy.x -= speed; // move to the left with 10 pixes
-            // guy.rotation = 3.14; // look to the left
-            guy.animations.play('walkLeft');
-        }
+        var world = game.world;
         if (cursors.up.isDown) {
             guy.y -= speed;
-            // guy.rotation = 3.14 * 3 / 2;
             guy.animations.play('walkUp');
+            target.y = 0;
+            target.x = guy.x + guy.width / 2;
         }
         if (cursors.down.isDown) {
             guy.y += speed;
-            // guy.rotation = 3.14 / 2;
             guy.animations.play('walkDown');
+            target.y = world.height;
+            target.x = guy.x + guy.width / 2;
+        }
+        if (cursors.right.isDown) {
+            guy.x += speed; // move to the right with 10 pixels
+            // play the registered animation
+            guy.animations.play('walkRight');
+            target.x = world.width;
+            target.y = guy.y + guy.height / 2;
+        }
+        if (cursors.left.isDown) {
+            guy.x -= speed; // move to the left with 10 pixes
+            guy.animations.play('walkLeft');
+            target.x = 0;
+            target.y = guy.y + guy.height / 2;
         }
     }
     else {
@@ -172,7 +178,7 @@ function update() {
 
     // fire when the SPACEBAR is pressed
     if (fireButton.isDown) {
-        weapon.fire();
+        weapon.fire(guy.body.center, target.x, target.y);
     }
 }
 
@@ -188,7 +194,7 @@ function isAnyCursorKeyPressed() {
 // added by Zlatko to debug the game state
 function render() {
 
-	game.debug.bodyInfo(guy, 40, 24);
+	// game.debug.bodyInfo(guy, 40, 24);
 
 	// game.debug.body(sprite);
 	// game.debug.body(sprite2);
