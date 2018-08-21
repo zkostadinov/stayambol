@@ -28,7 +28,7 @@ function preload() {
     // second param - relative path to the location of the file
     // third param - width of each frame
     // fourth param - height of each frame
-    game.load.spritesheet('guy', 'assets/images/professor_walk_cycle_no_hat.png', 576/9, 256/4);
+    game.load.spritesheet('guy', 'assets/images/zelda.png', 450 / 5, 360 / 4);
 
     // loads image
     game.load.image('star', 'assets/images/star.png');
@@ -67,10 +67,10 @@ function create() {
     // 2nd: array of frames which will be used for the animation
     // 3rd: framerate (frames per second)
     // 4th: if true loops through frames infinitely
-    guy.animations.add('walkUp', [0, 1, 2, 3, 4, 5, 6, 7, 8], 12, true);
-    guy.animations.add('walkLeft', [9, 10, 11, 12, 13, 14, 15, 16, 17], 12, true);
-    guy.animations.add('walkDown', [18, 19, 20, 21, 22, 23, 24, 25, 26], 12, true);
-    guy.animations.add('walkRight', [27, 28, 29, 30, 31, 32, 33, 34, 35], 12, true);
+    guy.animations.add('walkUp', [9, 10, 11, 12], 12, true);
+    guy.animations.add('walkLeft', [0, 1, 2, 3, 4], 12, true);
+    guy.animations.add('walkDown', [13, 14, 15, 16], 12, true);
+    guy.animations.add('walkRight', [5, 6, 7, 8], 12, true);
 
     // adds physics body to the HERO
     // so that we can collide with other objects
