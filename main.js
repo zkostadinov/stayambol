@@ -158,14 +158,13 @@ function update() {
             target.x = guy.x + guy.width / 2;
         }
         if (cursors.right.isDown) {
-            guy.x += speed; // move to the right with 10 pixels
-            // play the registered animation
+            guy.x += speed;
             guy.animations.play('walkRight');
             target.x = world.width;
             target.y = guy.y + guy.height / 2;
         }
         if (cursors.left.isDown) {
-            guy.x -= speed; // move to the left with 10 pixes
+            guy.x -= speed;
             guy.animations.play('walkLeft');
             target.x = 0;
             target.y = guy.y + guy.height / 2;
