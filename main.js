@@ -1,15 +1,16 @@
 
 // Setup game and add canvas element to the HTML
 var game = new Phaser.Game(
-    900, // width of canvas
-    500, // height of canvas
+    "90%", // width of canvas
+    "90%", // height of canvas
     Phaser.CANVAS, // use CANVAS and not WEBGL
     'game', // name of the game
     {   // object with the three functions required for Phaser to work
 
         preload: preload,  // loads all the game resources before game start
         create: create,    // setups the initial state of the game
-        update: update     // loops infinitely and checks for collisions, movement, keyboard input
+        update: update,    // loops infinitely and checks for collisions, movement, keyboard input
+        render: render
     }
 );
 
@@ -71,6 +72,11 @@ function create() {
     // adds physics body to the HERO
     // so that we can collide with other objects
     game.physics.enable(guy, Phaser.Physics.ARCADE);
+
+    // zlatko: stop at the ends of the world
+    guy.body.collideWorldBounds = true;
+
+    guy.body.bounce.setTo(1, 1);
 
     // WEAPON:
     // Creates a weapon that can fire bullets
@@ -173,4 +179,15 @@ function isAnyCursorKeyPressed() {
         cursors.left.isDown ||
         cursors.up.isDown ||
         cursors.down.isDown;
+}
+
+
+// added by Zlatko to debug the game state
+function render() {
+
+	game.debug.bodyInfo(guy, 40, 24);
+
+	// game.debug.body(sprite);
+	// game.debug.body(sprite2);
+
 }
