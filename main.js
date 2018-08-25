@@ -20,7 +20,6 @@ var score = 0;
 var weapon;
 var fireButton;
 var cursors;
-var target;
 
 function preload() {
     // spritesheet - collection of frames
@@ -61,6 +60,8 @@ function create() {
     // (but does not have physics body - can not collide with other object)
     // X, Y, name of the image
     guy = game.add.sprite(200, 200, 'guy');
+    guy.anchor.x = 0.5;
+    guy.anchor.y = 0.5;
 
     // registers animations for the hero
     // 1st: name of the animation
@@ -86,20 +87,15 @@ function create() {
     // 1st param: number of bullets
     // 2nd param: image for each bullet
     weapon = game.add.weapon(15, 'bullet');
-
+    
     // remove bullets when they reach end of canvas
     weapon.bulletKillType = Phaser.Weapon.KILL_WORLD_BOUNDS;
     // moving speed of each bullet (higher number means faster bullet)
     weapon.bulletSpeed = 600;
-
     // rate of fire in milliseconds (higher number means less fired bullets per second)
     weapon.fireRate = 100;
-
-    // the initial target point for the weapon
-    // sprite faces up, so we pick the point up
-    target = new Phaser.Point();
-    target.y = 0;
-    target.x = guy.x + guy.width / 2;
+    // zlatko add with tracking rotation
+    weapon.trackSprite(guy, 0, 0, true);
 
     // register the SPACEBAR as a button to fire the weapon
     fireButton = game.input.keyboard.addKey(Phaser.KeyCode.SPACEBAR);
@@ -122,6 +118,10 @@ function update() {
 
             // removes the star from the CANVAS
             star.kill();
+
+            // zlatko: update the score
+            score += 3;
+            text.setText(score);
         }
     );
 
@@ -141,43 +141,60 @@ function update() {
         }
     );
 
-    // check for pressed keys
+    var world = game.world;
+
+       // check for pressed keys
     var speed = 2;
+
+    var moving = false;
+
+    if (game.input.mousePointer.isDown) {
+        game.physics.arcade.moveToPointer(guy, speed * 100);
+
+        if (guy.body.velocity.x < 0) {
+            guy.animations.play('walkLeft');
+        } else {
+            guy.animations.play('walkRight');
+        }
+        moving = true;
+    } else {
+        // stop the move
+        guy.body.velocity.setTo(0, 0);
+    }
+    
     if (isAnyCursorKeyPressed()) {
-        var world = game.world;
         if (cursors.up.isDown) {
             guy.y -= speed;
+            guy.rotation = Math.PI * 3 / 2;
             guy.animations.play('walkUp');
-            target.y = 0;
-            target.x = guy.x + guy.width / 2;
         }
         if (cursors.down.isDown) {
             guy.y += speed;
+            guy.rotation = Math.PI / 2;
             guy.animations.play('walkDown');
-            target.y = world.height;
-            target.x = guy.x + guy.width / 2;
         }
         if (cursors.right.isDown) {
             guy.x += speed;
+            guy.rotation = 0;
             guy.animations.play('walkRight');
-            target.x = world.width;
-            target.y = guy.y + guy.height / 2;
         }
         if (cursors.left.isDown) {
             guy.x -= speed;
+            guy.rotation = Math.PI;
             guy.animations.play('walkLeft');
-            target.x = 0;
-            target.y = guy.y + guy.height / 2;
         }
+        // guy.body.angle = 0;
+        moving = true;
     }
-    else {
+
+    if (!moving) {
         // if no keys are pressed stop the animation
         guy.animations.stop();
     }
 
     // fire when the SPACEBAR is pressed
     if (fireButton.isDown) {
-        weapon.fire(guy.body.center, target.x, target.y);
+        weapon.fire();
     }
 }
 
