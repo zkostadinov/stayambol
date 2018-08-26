@@ -30,7 +30,8 @@ function preload() {
     game.load.spritesheet('guy', 'assets/images/professor_walk_cycle_no_hat.png', 576/9, 256/4);
 
     // loads image
-    game.load.image('star', 'assets/images/star.png');
+    // game.load.image('star', 'assets/images/star.png');
+    game.load.image('star', 'assets/images/apple.png');
     game.load.image('bullet', 'assets/images/bullet.png');
 }
 
@@ -58,8 +59,8 @@ function create() {
     // THE HERO:
     // creates a sprite which is visible and can move 
     // (but does not have physics body - can not collide with other object)
-    // X, Y, name of the image
-    guy = game.add.sprite(200, 200, 'guy');
+    // X, Y, name of the image, index of initial frame to be displayed
+    guy = game.add.sprite(200, 200, 'guy', 27);
     guy.anchor.x = 0.5;
     guy.anchor.y = 0.5;
 
@@ -95,7 +96,7 @@ function create() {
     // rate of fire in milliseconds (higher number means less fired bullets per second)
     weapon.fireRate = 100;
     // zlatko add with tracking rotation
-    weapon.trackSprite(guy, 0, 0, true);
+    weapon.trackSprite(guy, 20, 0, true);
 
     // register the SPACEBAR as a button to fire the weapon
     fireButton = game.input.keyboard.addKey(Phaser.KeyCode.SPACEBAR);
@@ -152,8 +153,10 @@ function update() {
         game.physics.arcade.moveToPointer(guy, speed * 100);
 
         if (guy.body.velocity.x < 0) {
+            guy.rotation = Math.PI;
             guy.animations.play('walkLeft');
         } else {
+            guy.rotation = 0;
             guy.animations.play('walkRight');
         }
         moving = true;
