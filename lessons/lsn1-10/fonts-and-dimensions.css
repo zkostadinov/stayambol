@@ -1,0 +1,46 @@
+
+ul {
+    /* Това маха булетчето пред листа в списъка */
+    list-style: none;
+}
+
+p {
+    padding-left: 1em;
+    font-size: 40;
+    font-style: italic;
+    font-weight: bolder;
+}
+
+.отместен {
+    padding-left: 2em;
+}
+
+#courier {
+    font-family: Courier New, Courier, monospace;
+}
+
+#arial {
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.blue {
+    background-color: lightblue;
+    margin-top: 1em;
+    font-size: larger;
+    padding: 1em;
+    border: thick;
+    border-color: black;
+    border-style: solid;
+}
+
+.width70 {
+    width: 70%;
+}
+
+.pixels200 {
+    width: 200px;
+}
+
+.height5 {
+    height: 5%;
+}
