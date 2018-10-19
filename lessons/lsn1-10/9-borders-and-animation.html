@@ -1,0 +1,52 @@
+<html>
+
+<head>
+    <meta charset="UTF-8">
+
+    <style lang="css">
+
+        .box {
+            position: absolute;
+            top: 5%;
+            left: 5%;
+            /*display: inline-block;*/
+            width: 90%;
+            height: 90%;
+            background-color: lightgreen;
+            border-color: green;
+            border-width: 1em;
+            border-radius: 1em;
+            border-style: inset;
+        }
+
+        @keyframes movement {
+            0%   {top: 0%; left: 0%; right: auto; bottom: auto;}
+            25%  {top: 60%; left: 30%; right: auto; bottom: auto;}
+            50%  {top: 60%; left: 90%; right: auto; bottom: auto;}
+            75%  {top: 80%; left: 90%; right: auto; bottom: auto;}
+            100%  {top: 0%; left: 0%; right: auto; bottom: auto;}
+        }
+
+        .ball {
+            position: absolute;
+            background-image: url("ball.jpeg");
+            width: 10em;
+            height: 10em;
+            background-size: cover;
+
+            animation-name: movement;
+            animation-duration: 5s;
+            animation-delay: 1s;
+            animation-iteration-count: infinite;
+        }
+
+    </style>
+</head>
+
+<body>
+    <div class="box">
+        <div class="ball" />
+    </div>
+</body>
+
+</html>
