@@ -1,0 +1,40 @@
+<html>
+    <head>
+        <meta charset="UTF-8">
+
+        <script>
+            window.onload = function(){
+                console.log("Страницата се зареди");
+                var name = prompt("Кой си ти?", "Златко");
+                document.getElementById("wellcome-message").innerText = "Здравей " + name + "!";
+            };
+        </script>
+    </head>
+
+    <body>
+        
+        <h1>
+            Тази страничка ще покаже съобщение.
+        </h1>
+        
+        <script>
+            alert("Това е показано с javascript!");
+        </script>
+
+        <h2>
+            Показано.
+        </h2>
+
+        <div id="js-content-container">
+
+        </div>
+
+        <script>
+            document.getElementById("js-content-container").innerHTML = "Това също е показано с javascript";
+        </script>
+
+        <div id="wellcome-message">
+        </div>
+
+    </body>
+</html>
