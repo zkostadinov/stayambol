@@ -1,0 +1,25 @@
+<html>
+    <head>
+        <meta charset="UTF-8"/>
+    </head>
+
+    <body>
+
+        <ul id="odd-numbers">
+        </ul>
+        
+        <script>
+
+        var text = "Нечетни числа";
+        var start = 1;
+        while(start <= 20000) {
+            text = text + "<li>" + start + "</li>";
+            start = start + 2;
+            // start ++;
+        }
+
+        document.getElementById("odd-numbers").innerHTML = text;
+        
+        </script>
+    </body>
+</html>
