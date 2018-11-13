@@ -1,0 +1,24 @@
+<html>
+    <head>
+        <meta charset="UTF-8"/>
+    </head>
+
+    <body>
+        <script>
+
+            do {
+                var number = prompt("Въведете число, моля!");
+                number = parseInt(number);
+            } while(isNaN(number));
+
+            // for (; number > 0; number = number - 3);
+
+            if (number % 3 == 0) {
+                alert("Дели се");
+            } else {
+                alert("Тц!");
+            }
+
+        </script>
+    </body>
+</html>

@@ -1,0 +1,27 @@
+<html>
+    <head>
+        <meta charset="UTF-8"/>
+    </head>
+
+    <body>
+        <script>
+
+            var sum = 0;
+            for (var num = 1; num <= 681; num = num + 1) {
+                
+                var check = num;
+                while(check > 0) {
+                    check = check - 3;
+                }
+                var delise = check == 0;
+
+                if (delise) {
+                    sum = sum + num;
+                }                
+            }
+
+            alert(sum);
+
+        </script>
+    </body>
+</html>
