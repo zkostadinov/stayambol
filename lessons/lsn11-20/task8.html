@@ -10,7 +10,6 @@
         <script>
 
             var students = [];
-
             do {
                 var name = prompt("Въведете име на ученик:");
                 if (name !== "null") {
@@ -20,8 +19,6 @@
 
             students.sort();
 
-            console.log("учениците са " + students);
-
             var studentObjects = [];
             for(let i = 0; i < students.length; i ++) {
                 studentObjects[i] = {
@@ -30,12 +27,14 @@
                 }
             }
 
+            console.log(studentObjects);
+
             var html = "";
-            for (...) {
+            for (let i = 0; i < studentObjects.length; i ++) {
                 student = studentObjects[i];
                 html = html + "<div>" + student.number + ": " +student.name+ "</div>"
             }
-
+            document.getElementById("students").innerHTML = html;
         </script>
     </body>
 </html>
