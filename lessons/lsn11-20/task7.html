@@ -1,0 +1,45 @@
+<html>
+    <head>
+        <meta charset="UTF-8"/>
+    </head>
+
+    <body>
+        <script>
+
+            var students = [];
+
+            do {
+                var name = prompt("Въведете име на ученик:");
+                if (name !== "null") {
+                    students[students.length] = name;
+                }
+            } while (name !== "null")
+
+            students.sort();
+
+            console.log("учениците са " + students);
+
+            var studentObjects = [];
+            for(let i = 0; i < students.length; i ++) {
+                studentObjects[i] = {
+                    name: students[i],
+                    number: i + 1
+                }
+            }
+
+            console.log(studentObjects);
+
+            var name = prompt("Моля въведете име на ученик:");
+            console.log("name=" + name);
+
+            for(let i = 0; i < studentObjects.length; i ++) {
+                var student = studentObjects[i];
+                console.log(student.name);
+                if (student.name === name) {
+                    alert("Номерът на ученика е " + student.number);
+                    break;
+                }
+            }
+        </script>
+    </body>
+</html>

@@ -1,0 +1,41 @@
+<html>
+    <head>
+        <meta charset="UTF-8"/>
+    </head>
+
+    <body>
+
+        <div id="students"></div>
+
+        <script>
+
+            var students = [];
+
+            do {
+                var name = prompt("Въведете име на ученик:");
+                if (name !== "null") {
+                    students[students.length] = name;
+                }
+            } while (name !== "null")
+
+            students.sort();
+
+            console.log("учениците са " + students);
+
+            var studentObjects = [];
+            for(let i = 0; i < students.length; i ++) {
+                studentObjects[i] = {
+                    name: students[i],
+                    number: i + 1
+                }
+            }
+
+            var html = "";
+            for (...) {
+                student = studentObjects[i];
+                html = html + "<div>" + student.number + ": " +student.name+ "</div>"
+            }
+
+        </script>
+    </body>
+</html>

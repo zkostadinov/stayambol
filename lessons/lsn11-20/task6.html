@@ -1,0 +1,34 @@
+<html>
+    <head>
+        <meta charset="UTF-8"/>
+    </head>
+
+    <body>
+        <script>
+
+            var students = [];
+
+            do {
+                var name = prompt("Въведете име на ученик:");
+                // console.log(name);
+                if (name !== "null") {
+                    students[students.length] = name;
+                }
+                // console.log(name !== null);
+                // console.log(name === "null");
+                // console.log(typeof(name));
+            } while (name !== "null")
+
+            console.log("Броят на учениците е " + students.length);
+            console.log("учениците са " + students);
+
+            do {
+                var number = parseInt(prompt("Моля въведете номер на търсения ученик:"));
+            } while(isNaN(number))
+
+            students.sort();
+            alert(students[number - 1]);
+
+        </script>
+    </body>
+</html>
