@@ -11,18 +11,18 @@
 
             var students = [];
             do {
-                var name = prompt("Въведете име на ученик:");
-                if (name !== "null") {
-                    students[students.length] = name;
+                var studentName = prompt("Въведете име на ученик:");
+                if (studentName) {
+                    students[students.length] = studentName;
                 }
-            } while (name !== "null")
+            } while (studentName)
 
             students.sort();
 
             var studentObjects = [];
             for(let i = 0; i < students.length; i ++) {
                 studentObjects[i] = {
-                    name: students[i],
+                    studentName: students[i],
                     number: i + 1
                 }
             }
@@ -32,7 +32,7 @@
             var html = "";
             for (let i = 0; i < studentObjects.length; i ++) {
                 student = studentObjects[i];
-                html = html + "<div>" + student.number + ": " +student.name+ "</div>"
+                html = html + "<div>" + student.number + ": " +student.studentName+ "</div>"
             }
             document.getElementById("students").innerHTML = html;
         </script>
