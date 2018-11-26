@@ -1,3 +1,5 @@
+var head;
+
 // Setup game and add canvas element to the HTML
 var game = new Phaser.Game(
     "100", // width of canvas
@@ -14,12 +16,14 @@ var game = new Phaser.Game(
         create: create,
         // вика се при каквато и да е промяна на състоянието: 
         // натиснати бутони, клавиши, събития в самата игра като сблъсъци и др.
-        update: update
+        update: update,
+        render: () => {
+            game.debug.bodyInfo(head, 32, 32);
+        }
     }
 );
 
 function create() {
-    console.log("create called");
     head = game.add.sprite(game.world.randomX, game.world.randomY, 'snake', 1);
     cursors = game.input.keyboard.createCursorKeys();
     head.scale.setTo(3, 3);
@@ -52,5 +56,4 @@ function update() {
         head.body.velocity.x = -speed;
         head.body.velocity.y = 0;
     }
-    console.log(head.rotation);
 }
