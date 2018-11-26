@@ -1,4 +1,5 @@
-var head;
+const COUNT_APPLES = 3;
+const TIME_FOR_APPLE = Phaser.Timer.SECOND * 5;
 
 // Setup game and add canvas element to the HTML
 var game = new Phaser.Game(
@@ -11,6 +12,7 @@ var game = new Phaser.Game(
         // зарежда начални данни в паметта
         preload: () => {
             game.load.spritesheet('snake', 'images/snake.png', 16, 16);
+            game.load.image('apple', 'images/apple.png');
         },
         // вика се при стартиране на играта
         create: create,
@@ -23,15 +25,27 @@ var game = new Phaser.Game(
     }
 );
 
+var head;
+var cursors;
+var apples;
+
 function create() {
-    head = game.add.sprite(game.world.randomX, game.world.randomY, 'snake', 1);
+    // общи инициализации
     cursors = game.input.keyboard.createCursorKeys();
+    game.stage.backgroundColor = '#5db737';
+
+    // инициализираме змията
+    head = game.add.sprite(game.world.randomX, game.world.randomY, 'snake', 1);
     head.scale.setTo(3, 3);
     game.physics.enable(head, Phaser.Physics.ARCADE);
     head.body.collideWorldBounds = true;
     head.body.velocity.x = 100;
     head.anchor.x = 0.5;
     head.anchor.y = 0.5;
+
+    // инициализираме ябълки
+    apples = [];
+    game.time.events.repeat(TIME_FOR_APPLE, 10000, fillApples, this);
 }
 
 function update() {
@@ -55,5 +69,29 @@ function update() {
         head.rotation = Math.PI;
         head.body.velocity.x = -speed;
         head.body.velocity.y = 0;
+    }
+}
+
+class Apple {
+    constructor() {
+        this.born = Date.now();
+        this.sprite = game.add.sprite(game.world.randomX, game.world.randomY, 'apple', 1);
+    }
+
+    isExpired() {
+        return Date.now() - this.born > 10000;
+    }
+}
+
+function fillApples() {
+    apples.forEach((apple, index) => {
+        if (apple.isExpired()) {
+            apples.splice(index, 1);
+            apple.sprite.destroy();
+        }
+    });
+
+    if (apples.length < COUNT_APPLES) {
+        apples.push(new Apple());
     }
 }
