@@ -14,7 +14,7 @@ var game = new Phaser.Game(
         create: function() {
             game.stage.backgroundColor='#229944';
             head = game.add.sprite(10, 10, 'head', 1);
-            head.scale.setTo(0.1, 0.1);
+            head.scale.setTo(-0.1, 0.1);
             keySpace = game.input.keyboard.addKey(Phaser.KeyCode.SPACEBAR);
             keyUp = game.input.keyboard.addKey(Phaser.KeyCode.UP);
             keyDown = game.input.keyboard.addKey(Phaser.KeyCode.DOWN);
@@ -26,24 +26,40 @@ var game = new Phaser.Game(
             head.anchor.x = 0.5;
             head.anchor.y = 0.5;        
         },
-        update: () => {
-            var speed = 300;
-            if (keyUp.isDown) {
-                head.body.velocity.x = 0;
-                head.body.velocity.y = -speed;
-            }
-            if (keyDown.isDown) {
-                head.body.velocity.x = 0;
-                head.body.velocity.y = speed;
-            }
-            if (keyLeft.isDown) {
-                head.body.velocity.x = -speed;
-                head.body.velocity.y = 0;
-            }
-            if (keyRight.isDown) {
-                head.body.velocity.x = speed;
-                head.body.velocity.y = 0;
-            }
+        update: update,
+        render: () => {
         }
     }
 );
+
+function update() {
+    var speed = 300;
+    if (keyUp.isDown) {
+        head.body.velocity.x = 0;
+        head.body.velocity.y = -speed;
+        newKeyPressed = keyUp;
+        head.rotation = Math.PI * 3 / 2;
+        head.scale.x = -0.1;
+    }
+    if (keyDown.isDown) {
+        head.body.velocity.x = 0;
+        head.body.velocity.y = speed;
+        newKeyPressed = keyDown;
+        head.scale.x = -0.1;
+        head.rotation = Math.PI / 2;
+    }
+    if (keyLeft.isDown) {
+        head.body.velocity.x = -speed;
+        head.body.velocity.y = 0;
+        newKeyPressed = keyLeft;
+        head.scale.x = 0.1;
+        head.rotation = 0;
+    }
+    if (keyRight.isDown) {
+        head.body.velocity.x = speed;
+        head.body.velocity.y = 0;
+        newKeyPressed = keyRight;
+        head.scale.x = -0.1;
+        head.rotation = 0;
+    }
+}
