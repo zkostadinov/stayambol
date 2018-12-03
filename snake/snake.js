@@ -28,28 +28,34 @@ var game = new Phaser.Game(
 var head;
 var cursors;
 var apples;
+var text;
 
 function create() {
+    game.physics.startSystem(Phaser.Physics.ARCADE);
+
     // общи инициализации
     cursors = game.input.keyboard.createCursorKeys();
     game.stage.backgroundColor = '#5db737';
 
     // инициализираме змията
-    head = game.add.sprite(game.world.randomX, game.world.randomY, 'snake', 1);
+    head = game.add.sprite(200, 200, 'snake', 1);
     head.scale.setTo(3, 3);
     game.physics.enable(head, Phaser.Physics.ARCADE);
     head.body.collideWorldBounds = true;
-    head.body.velocity.x = 100;
     head.anchor.x = 0.5;
     head.anchor.y = 0.5;
 
     // инициализираме ябълки
     apples = [];
     game.time.events.repeat(TIME_FOR_APPLE, 10000, fillApples, this);
+
+    text = game.add.text(game.world.width - 200, 20, 'Няма изядени ябълки');
 }
 
+var eatenApples = 0;
+
 function update() {
-    speed = 100;
+    speed = 300;
     if (cursors.up.isDown) {
         head.rotation = Math.PI * 3 / 2;
         head.body.velocity.y = -speed;
@@ -70,12 +76,25 @@ function update() {
         head.body.velocity.x = -speed;
         head.body.velocity.y = 0;
     }
+
+    apples.forEach((apple, index) => {
+        console.log('check index ' + index);
+        game.physics.arcade.collide(
+            apple.sprite, head, () => {
+                console.log('detected');
+                eatenApples ++;
+                text = "Изядени ябълки: " + eatenApples;
+                removeApple(apple, index);
+            
+        });
+    });
 }
 
 class Apple {
     constructor() {
         this.born = Date.now();
         this.sprite = game.add.sprite(game.world.randomX, game.world.randomY, 'apple', 1);
+        game.physics.enable(this.sprite, Phaser.Physics.ARCADE);
     }
 
     isExpired() {
@@ -86,12 +105,16 @@ class Apple {
 function fillApples() {
     apples.forEach((apple, index) => {
         if (apple.isExpired()) {
-            apples.splice(index, 1);
-            apple.sprite.destroy();
+
         }
     });
 
     if (apples.length < COUNT_APPLES) {
         apples.push(new Apple());
     }
+}
+
+function removeApple(apple, index) {
+    apples.splice(index, 1);
+    apple.sprite.destroy();
 }
