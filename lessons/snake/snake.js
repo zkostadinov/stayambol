@@ -1,6 +1,8 @@
 var keySpace;
 var head;
-var apple;
+var apples;
+var points = 0;
+var text;
 
 var game = new Phaser.Game(
     '100%', // width of canvas
@@ -13,30 +15,41 @@ var game = new Phaser.Game(
             game.load.image('head', 'spinning-snake-29.png');
             game.load.image('apple', 'apple.png');
         },
-        create: function() {
-            game.stage.backgroundColor='#229944';
-            head = game.add.sprite(10, 10, 'head', 1);
-            head.scale.setTo(-0.1, 0.1);
-            keySpace = game.input.keyboard.addKey(Phaser.KeyCode.SPACEBAR);
-            keyUp = game.input.keyboard.addKey(Phaser.KeyCode.UP);
-            keyDown = game.input.keyboard.addKey(Phaser.KeyCode.DOWN);
-            keyLeft = game.input.keyboard.addKey(Phaser.KeyCode.LEFT);
-            keyRight = game.input.keyboard.addKey(Phaser.KeyCode.RIGHT);
-
-            game.physics.enable(head, Phaser.Physics.ARCADE);
-            head.body.collideWorldBounds = true;
-            head.anchor.x = 0.5;
-            head.anchor.y = 0.5;        
-
-            apple = game.add.sprite(100, 100, 'apple', 1);
-            game.physics.enable(apple, Phaser.Physics.ARCADE);
-        },
+        create: myCreateFunction,
         update: myUpdateFunction,
         render: () => {
             // oihiuh
         }
     }
 );
+
+function myCreateFunction() {        
+    game.stage.backgroundColor='#229944';
+    head = game.add.sprite(10, 10, 'head', 1);
+    head.scale.setTo(-0.1, 0.1);
+    keySpace = game.input.keyboard.addKey(Phaser.KeyCode.SPACEBAR);
+    keyUp = game.input.keyboard.addKey(Phaser.KeyCode.UP);
+    keyDown = game.input.keyboard.addKey(Phaser.KeyCode.DOWN);
+    keyLeft = game.input.keyboard.addKey(Phaser.KeyCode.LEFT);
+    keyRight = game.input.keyboard.addKey(Phaser.KeyCode.RIGHT);
+
+    game.physics.enable(head, Phaser.Physics.ARCADE);
+    head.body.collideWorldBounds = true;
+    head.anchor.x = 0.5;
+    head.anchor.y = 0.5;        
+
+    apples = [];
+    apples.push(game.add.sprite(100, 100, 'apple', 1));
+    apples.push(game.add.sprite(200, 200, 'apple', 1));
+    apples.push(game.add.sprite(300, 400, 'apple', 1));
+    // ...
+
+    for (let i = 0; i < apples.length; i ++) {
+        game.physics.enable(apples[i], Phaser.Physics.ARCADE);
+    }
+
+    text = game.add.text(game.world.bounds.width - 200, 100, "");
+}
 
 function myUpdateFunction() {
     var speed = 300;
@@ -65,9 +78,14 @@ function myUpdateFunction() {
         head.rotation = 0;
     }
 
-    game.physics.arcade.collide(head, apple, spritesCollide);
+    for (let i = 0; i < apples.length; i ++) {
+        game.physics.arcade.collide(head, apples[i], spritesCollide);
+    }
+
+    text.setText("Точки: " + points);
 }
 
-function spritesCollide() {
+function spritesCollide(head, apple) {
     apple.destroy();
+    points = points + 5;
 }
