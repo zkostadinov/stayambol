@@ -39,16 +39,19 @@ function myCreateFunction() {
     head.anchor.y = 0.5;        
 
     apples = [];
-    apples.push(game.add.sprite(100, 100, 'apple', 1));
-    apples.push(game.add.sprite(200, 200, 'apple', 1));
-    apples.push(game.add.sprite(300, 400, 'apple', 1));
+    apples.push(createApple(100, 100));
+    apples.push(createApple(200, 200));
+    apples.push(createApple(300, 400));
     // ...
 
-    for (let i = 0; i < apples.length; i ++) {
-        game.physics.enable(apples[i], Phaser.Physics.ARCADE);
-    }
-
     text = game.add.text(game.world.bounds.width - 200, 100, "");
+}
+
+function createApple(x, y) {
+    var newApple = game.add.sprite(x, y, 'apple', 1);
+    newApple.scale.setTo(0.5, 0.5);
+    game.physics.enable(apple, Phaser.Physics.ARCADE);
+    return newApple;
 }
 
 function myUpdateFunction() {
