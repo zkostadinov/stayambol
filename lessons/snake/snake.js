@@ -1,10 +1,13 @@
+var MAX_HEAD_TURNING_POINTS = 10;
+var TIME_TO_CHECK_FOR_MISSING_APPLES = 5;
+var NUMBER_OF_APPLES = 5;
+
 var head;
 var apples;
 var applesEatenBySnake;
 var text;
 
 var headTurningPoints = [];
-var MAX_HEAD_TURNING_POINTS = 10;
 
 var game = new Phaser.Game(
     '100%', // width of canvas
@@ -24,11 +27,11 @@ var game = new Phaser.Game(
             // game.debug.bodyInfo(head, 10, 200);
 
             // game.debug.text(headTurningPoints, 10, 10);
-            game.debug.text('direction: ' + direction.x + ' / ' + direction.y, 500, 10);
-            game.debug.text('center: ' + head.position, 500, 30);
-            if (applesEatenBySnake.length > 0) {
-                game.debug.text('apple: ' + applesEatenBySnake[0].position, 500, 50);
-            }
+            // game.debug.text('direction: ' + direction.x + ' / ' + direction.y, 500, 10);
+            // game.debug.text('center: ' + head.position, 500, 30);
+            // if (applesEatenBySnake.length > 0) {
+            //     game.debug.text('apple: ' + applesEatenBySnake[0].position, 500, 50);
+            // }
 
             // render the sprites bounds
             /*if (head.getBounds()) {
@@ -46,10 +49,6 @@ function myCreateFunction() {
     game.stage.backgroundColor = '#229944';
     head = game.add.sprite(10, 10, 'head', 1);
     head.scale.setTo(-0.1, 0.1);
-    let keyUp = game.input.keyboard.addKey(Phaser.KeyCode.UP);
-    let keyDown = game.input.keyboard.addKey(Phaser.KeyCode.DOWN);
-    let keyLeft = game.input.keyboard.addKey(Phaser.KeyCode.LEFT);
-    let keyRight = game.input.keyboard.addKey(Phaser.KeyCode.RIGHT);
 
     game.physics.enable(head, Phaser.Physics.ARCADE);
     head.body.collideWorldBounds = true;
@@ -57,19 +56,6 @@ function myCreateFunction() {
     head.anchor.y = 0.5;
 
     apples = [];
-    apples.push(createApple(100, 100));
-    apples.push(createApple(200, 200));
-    apples.push(createApple(300, 400));
-    apples.push(createApple(400, 330));
-    apples.push(createApple(500, 400));
-    apples.push(createApple(600, 230));
-    apples.push(createApple(130, 400));
-    apples.push(createApple(110, 430));
-    apples.push(createApple(400, 330));
-    apples.push(createApple(900, 830));
-    apples.push(createApple(1100, 230));
-    apples.push(createApple(420, 730));
-    apples.push(createApple(411, 830));
     // ...
 
     text = game.add.text(game.world.bounds.width - 200, 100, "");
@@ -85,6 +71,11 @@ function myCreateFunction() {
             headTurningPoints.splice(MAX_HEAD_TURNING_POINTS, headTurningPoints.length - MAX_HEAD_TURNING_POINTS);
         }
     }
+
+    let keyUp = game.input.keyboard.addKey(Phaser.KeyCode.UP);
+    let keyDown = game.input.keyboard.addKey(Phaser.KeyCode.DOWN);
+    let keyLeft = game.input.keyboard.addKey(Phaser.KeyCode.LEFT);
+    let keyRight = game.input.keyboard.addKey(Phaser.KeyCode.RIGHT);
 
     keyUp.onDown.add(() => {
         head.body.velocity.x = 0;
@@ -116,6 +107,16 @@ function myCreateFunction() {
     });
     addHeadTurningPoint(); // remember the initial point as a turning point
     // end of movement handling code
+
+    // fill apples at regular time
+    game.time.events.repeat(TIME_TO_CHECK_FOR_MISSING_APPLES, 10000, fillApples, this);
+    fillApples();
+}
+
+function fillApples() {
+    while(apples.length < NUMBER_OF_APPLES) {
+        apples.push(createApple(game.world.randomX, game.world.randomY, 'apple', 1));
+    }
 }
 
 function createApple(x, y) {
@@ -149,18 +150,17 @@ function myUpdateFunction() {
         y += eaten.height * direction.y;
 
         // load the next turning point if needed
-        if (direction.x > 0 && x >= previous.x ||
+        if ((direction.x > 0 && x >= previous.x ||
             direction.x < 0 && x <= previous.x ||
             direction.y > 0 && y >= previous.y ||
-            direction.y < 0 && y <= previous.y
+            direction.y < 0 && y <= previous.y)
             && stack.length > 0) {
             current = previous;
             previous = stack.pop();
+            // sometimes previous is undefined, probably when the array ends
             direction = new Phaser.Point(
                 Math.sign(Math.round(previous.x - current.x)),
                 Math.sign(Math.round(previous.y - current.y)));
-                // x = current.x + Math.abs(head.width) * direction.x;
-                // y = current.y + head.height * direction.y;
             }
     }
 }
