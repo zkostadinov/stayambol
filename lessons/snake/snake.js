@@ -128,8 +128,9 @@ function myUpdateFunction() {
     direction = new Phaser.Point(
         Math.sign(Math.round(previous.x - current.x)), 
         Math.sign(Math.round(previous.y - current.y)));
-    var x = current.x + head.width * direction.x;
-    var y = current.y + head.height / 2 * direction.y;
+    // we need the abs width here, as the scaling screwes it up
+    var x = current.x + Math.abs(head.width) * direction.x;
+    var y = current.y + head.height * direction.y;
     for (let i = 0; i < applesEatenBySnake.length; i ++) {
         let eaten = applesEatenBySnake[i];
         eaten.centerX = x;
