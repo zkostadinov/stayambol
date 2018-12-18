@@ -60,6 +60,16 @@ function myCreateFunction() {
     apples.push(createApple(100, 100));
     apples.push(createApple(200, 200));
     apples.push(createApple(300, 400));
+    apples.push(createApple(400, 330));
+    apples.push(createApple(500, 400));
+    apples.push(createApple(600, 230));
+    apples.push(createApple(130, 400));
+    apples.push(createApple(110, 430));
+    apples.push(createApple(400, 330));
+    apples.push(createApple(900, 830));
+    apples.push(createApple(1100, 230));
+    apples.push(createApple(420, 730));
+    apples.push(createApple(411, 830));
     // ...
 
     text = game.add.text(game.world.bounds.width - 200, 100, "");
@@ -116,7 +126,7 @@ function createApple(x, y) {
 }
 
 function myUpdateFunction() {
-    for (let i = 0; i < apples.length; i ++) {
+    for (let i = 0; i < apples.length; i++) {
         game.physics.arcade.collide(head, apples[i], snakeHitApple);
     }
 
@@ -126,17 +136,32 @@ function myUpdateFunction() {
     // this considers only the last point
     var previous = stack.pop();
     direction = new Phaser.Point(
-        Math.sign(Math.round(previous.x - current.x)), 
+        Math.sign(Math.round(previous.x - current.x)),
         Math.sign(Math.round(previous.y - current.y)));
     // we need the abs width here, as the scaling screwes it up
     var x = current.x + Math.abs(head.width) * direction.x;
     var y = current.y + head.height * direction.y;
-    for (let i = 0; i < applesEatenBySnake.length; i ++) {
+    for (let i = 0; i < applesEatenBySnake.length; i++) {
         let eaten = applesEatenBySnake[i];
         eaten.centerX = x;
         eaten.centerY = y;
         x += eaten.width * direction.x;
         y += eaten.height * direction.y;
+
+        // load the next turning point if needed
+        if (direction.x > 0 && x >= previous.x ||
+            direction.x < 0 && x <= previous.x ||
+            direction.y > 0 && y >= previous.y ||
+            direction.y < 0 && y <= previous.y
+            && stack.length > 0) {
+            current = previous;
+            previous = stack.pop();
+            direction = new Phaser.Point(
+                Math.sign(Math.round(previous.x - current.x)),
+                Math.sign(Math.round(previous.y - current.y)));
+                // x = current.x + Math.abs(head.width) * direction.x;
+                // y = current.y + head.height * direction.y;
+            }
     }
 }
 
