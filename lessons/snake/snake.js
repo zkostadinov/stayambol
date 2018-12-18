@@ -19,8 +19,17 @@ var game = new Phaser.Game(
         create: myCreateFunction,
         update: myUpdateFunction,
         render: () => {
-                game.debug.spriteInfo(head, 10, 100);
-                game.debug.bodyInfo(head, 10, 200);
+                // game.debug.spriteInfo(head, 10, 100);
+                // game.debug.bodyInfo(head, 10, 200);
+
+                // render the sprites bounds
+                /*if (head.getBounds()) {
+                    game.debug.rectangle(head.getBounds(), '#ffffff', false);
+                }
+                applesEatenBySnake.forEach(apple => {
+                    game.debug.rectangle(apple.getBounds(), '#ffffff', false);
+                });*/
+                
         }
     }
 );
@@ -106,4 +115,8 @@ function snakeHitApple(head, apple) {
     points = points + 5;
     applesEatenBySnake.push(apple);
     apple.body.velocity.setTo(0,0);
+
+    // scale the size of the apple to the size of the head
+    apple.scale.setTo(1, 1);
+    apple.scale.setTo(Math.abs(head.width / apple.width), Math.abs(head.height / apple.height));
 }
