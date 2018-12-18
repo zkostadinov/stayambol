@@ -2,6 +2,8 @@ var keySpace;
 var head;
 var apples;
 var points = 0;
+var applesEatenBySnakeCount;
+var applesEatenBySnake;
 var text;
 
 var game = new Phaser.Game(
@@ -18,7 +20,10 @@ var game = new Phaser.Game(
         create: myCreateFunction,
         update: myUpdateFunction,
         render: () => {
-            // oihiuh
+            if (applesEatenBySnakeCount > 0) {
+                game.debug.spriteInfo(applesEatenBySnake[0], 20, 10);
+                game.debug.spriteInfo(head, 10, 100);
+            }
         }
     }
 );
@@ -45,6 +50,9 @@ function myCreateFunction() {
     // ...
 
     text = game.add.text(game.world.bounds.width - 200, 100, "");
+
+    applesEatenBySnakeCount = 0;
+    applesEatenBySnake = [];
 }
 
 function createApple(x, y) {
@@ -82,13 +90,24 @@ function myUpdateFunction() {
     }
 
     for (let i = 0; i < apples.length; i ++) {
-        game.physics.arcade.collide(head, apples[i], spritesCollide);
+        game.physics.arcade.collide(head, apples[i], snakeHitApple);
     }
 
     text.setText("Точки: " + points);
+
+    var x = head.x + head.width;
+    var y = head.y;
+    for (let i = 0; i < applesEatenBySnakeCount; i ++) {
+        let eaten = applesEatenBySnake[i];
+        eaten.x = x;
+        eaten.y = y;
+        x += eaten.width;
+    }
 }
 
-function spritesCollide(head, apple) {
-    apple.destroy();
+function snakeHitApple(head, apple) {
+    apples.splice(apples.indexOf(apple), 1);
     points = points + 5;
+    applesEatenBySnakeCount = applesEatenBySnakeCount + 1;
+    applesEatenBySnake.push(apple);
 }
