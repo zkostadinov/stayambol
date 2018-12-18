@@ -50,7 +50,7 @@ function myCreateFunction() {
 function createApple(x, y) {
     var newApple = game.add.sprite(x, y, 'apple', 1);
     newApple.scale.setTo(0.5, 0.5);
-    game.physics.enable(apple, Phaser.Physics.ARCADE);
+    game.physics.enable(newApple, Phaser.Physics.ARCADE);
     return newApple;
 }
 
