@@ -158,16 +158,23 @@ function myUpdateFunction() {
             current = previous;
             previous = stack.pop();
             // sometimes previous is undefined, probably when the array ends
+            var oldDirection = direction;
             direction = new Phaser.Point(
                 Math.sign(Math.round(previous.x - current.x)),
                 Math.sign(Math.round(previous.y - current.y)));
+            // if new direction is NOT like the old one - change last X and Y
+            if (!oldDirection.equals(direction)) {
+                var x = current.x + Math.abs(eaten.width) * direction.x;
+                var y = current.y + eaten.height * direction.y;
             }
+        }
     }
 }
 
 function snakeHitApple(head, apple) {
     apples.splice(apples.indexOf(apple), 1);
     applesEatenBySnake.push(apple);
+    head.body.velocity.add(apple.body.velocity.x, apple.body.velocity.y);
     apple.body.velocity.setTo(0, 0);
 
     // scale the size of the apple to the size of the head
