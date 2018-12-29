@@ -30,7 +30,7 @@ function create() {
 }
 
 function update () {
-    pad.x = Math.min(game.input.x, game.world.width - pad.width / 2);
+    pad.x = Math.max(Math.min(game.input.x, game.world.width - pad.width / 2), pad.width / 2);
 }
 
 function render() {
