@@ -23,7 +23,6 @@ function create() {
     pad.anchor.x = 0.5;
     game.physics.enable(pad, Phaser.Physics.ARCADE);
     // make the ball bounce on pad
-    pad.body.collideWorldBounds = true;
     pad.body.bounce.set(1);
     pad.body.immovable = true;
 
@@ -52,19 +51,42 @@ function startBall() {
     ball.body.collideWorldBounds = true;
     // make the ball bounce on pad
     ball.body.bounce.set(1);
-    ball.body.velocity.y = -300;
-    ball.body.velocity.x = -75;
+    ball.body.velocity.y = -1000;
+    ball.body.velocity.x = -150;
 }
 
 function update () {
     pad.x = Math.max(Math.min(game.input.x, game.world.width - pad.width / 2), pad.width / 2);
-    game.physics.arcade.collide(pad, ball);
+
+    game.physics.arcade.collide(ball, pad, reflectBall, null, this);
 }
 
 function render() {
     game.debug.spriteInfo(pad, 0, 0);
 }
 
-function fire() {
+function reflectBall(ball, pad) {
 
+    var diff = 0;
+
+    if (ball.x < pad.x)
+    {
+        //  Ball is on the left-hand side of the paddle
+        diff = pad.x - ball.x;
+        ball.body.velocity.x = (-10 * diff);
+    }
+    else if (ball.x > pad.x)
+    {
+        //  Ball is on the right-hand side of the paddle
+        diff = ball.x -pad.x;
+        ball.body.velocity.x = (10 * diff);
+    }
+    else
+    {
+        //  Ball is perfectly in the middle
+        //  Add a little random X to stop it bouncing straight up!
+        ball.body.velocity.x = 2 + Math.random() * 8;
+    }
+
+    return false;
 }
