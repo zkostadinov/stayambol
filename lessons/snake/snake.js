@@ -1,9 +1,16 @@
+const COUNT_APPLES = 5;
+
+const UP = 'up';
+const DOWN = 'down';
+const LEFT = 'left';
+const RIGHT = 'right';
+
+var direction;
+
 var keySpace;
 var head;
 var apples;
-var points = 0;
 var applesEatenBySnake;
-var text;
 
 var game = new Phaser.Game(
     '100%', // width of canvas
@@ -21,6 +28,7 @@ var game = new Phaser.Game(
         render: () => {
                 // game.debug.spriteInfo(head, 10, 100);
                 // game.debug.bodyInfo(head, 10, 200);
+                game.debug.text(direction, 10, 20);
 
                 // render the sprites bounds
                 /*if (head.getBounds()) {
@@ -50,12 +58,11 @@ function myCreateFunction() {
     head.anchor.y = 0.5;        
 
     apples = [];
-    apples.push(createApple(100, 100));
-    apples.push(createApple(200, 200));
-    apples.push(createApple(300, 400));
+    for (let i = 1; i <= COUNT_APPLES; i ++) {
+        createApple(game.world.randomX, game.world.randomY);
+    }
+    
     // ...
-
-    text = game.add.text(game.world.bounds.width - 200, 100, "");
 
     applesEatenBySnake = [];
 }
@@ -64,6 +71,7 @@ function createApple(x, y) {
     var newApple = game.add.sprite(x, y, 'apple', 1);
     newApple.scale.setTo(0.5, 0.5);
     game.physics.enable(newApple, Phaser.Physics.ARCADE);
+    apples.push(newApple);
     return newApple;
 }
 
@@ -74,49 +82,70 @@ function myUpdateFunction() {
         head.body.velocity.y = -speed;
         head.rotation = Math.PI * 3 / 2;
         head.scale.x = -0.1;
+        direction = UP;
     }
     if (keyDown.isDown) {
         head.body.velocity.x = 0;
         head.body.velocity.y = speed;
         head.scale.x = -0.1;
         head.rotation = Math.PI / 2;
+        direction = DOWN;
     }
     if (keyLeft.isDown) {
         head.body.velocity.x = -speed;
         head.body.velocity.y = 0;
         head.scale.x = 0.1;
         head.rotation = 0;
+        direction = LEFT;
     }
     if (keyRight.isDown) {
         head.body.velocity.x = speed;
         head.body.velocity.y = 0;
         head.scale.x = -0.1;
         head.rotation = 0;
+        direction = RIGHT;
     }
 
     for (let i = 0; i < apples.length; i ++) {
         game.physics.arcade.collide(head, apples[i], snakeHitApple);
     }
 
-    text.setText("Точки: " + points);
-
-    var x = head.body.x + head.body.width;
-    var y = head.body.y;
-    for (let i = 0; i < applesEatenBySnake.length; i ++) {
-        let eaten = applesEatenBySnake[i];
-        eaten.x = x;
-        eaten.y = y;
-        x += eaten.width;
+    if (direction === LEFT) {
+        var x = head.body.x + head.body.width;
+        var y = head.body.y;
+        for (let i = 0; i < applesEatenBySnake.length; i ++) {
+            let eaten = applesEatenBySnake[i];
+            eaten.x = x;
+            eaten.y = y;
+            x += eaten.width;
+        }
+    } else if (direction === RIGHT ||
+         direction === UP || 
+         direction === DOWN) {
+        if (applesEatenBySnake.length > 0){
+            var x = head.body.x - applesEatenBySnake[0].width;
+            var y = head.body.y;
+            for (let i = 0; i < applesEatenBySnake.length; i ++) {
+                let eaten = applesEatenBySnake[i];
+                eaten.x = x - eaten.width;
+                eaten.y = y;
+                x -= eaten.width;
+            }
+        }
     }
 }
 
 function snakeHitApple(head, apple) {
     apples.splice(apples.indexOf(apple), 1);
-    points = points + 5;
     applesEatenBySnake.push(apple);
+    head.body.velocity.x = head.body.velocity.x + apple.body.velocity.x;
+    head.body.velocity.y = head.body.velocity.y + apple.body.velocity.y;
     apple.body.velocity.setTo(0,0);
 
     // scale the size of the apple to the size of the head
     apple.scale.setTo(1, 1);
     apple.scale.setTo(Math.abs(head.width / apple.width), Math.abs(head.height / apple.height));
+
+    // create new apple
+    createApple(game.world.randomX, game.world.randomY);
 }
