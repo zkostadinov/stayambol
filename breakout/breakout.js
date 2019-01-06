@@ -26,16 +26,54 @@ function create() {
     pad.body.bounce.set(1);
     pad.body.immovable = true;
 
-    weapon = game.add.weapon(15, 'breakout', '59-Breakout-Tiles.png');
+    createWeaponAnimation();
+    weapon = game.add.weapon(-1, 'star');
     weapon.bulletKillType = Phaser.Weapon.KILL_WORLD_BOUNDS;
     weapon.bulletSpeed = 600;
     weapon.fireRate = 100;
     weapon.fireAngle = Phaser.ANGLE_UP;
     weapon.trackSprite(pad, 0, 0, false);
+    weapon.addBulletAnimation('rotate-star', null, 30, true);
 
     game.input.activePointer.leftButton.onDown.add(() => {weapon.fire()});
     game.input.activePointer.middleButton.onDown.add(startBall);
     game.physics.arcade.checkCollision.down = false;
+
+    bricks = game.add.group();
+    bricks.enableBody = true;
+    bricks.physicsBodyType = Phaser.Physics.ARCADE;
+
+    
+    let paddingLeft = 100;
+    let paddingTop = 100;
+    let paddingRight = 100;
+    let brickPerRow = 10;
+    let brickWidth = (game.world.width - paddingLeft - paddingRight) / brickPerRow;
+    let x = paddingLeft;
+    let y = paddingTop;
+    for (let i = 0; i < 10; i ++) {
+        let brick = bricks.create(x, y, 'breakout', '01-Breakout-Tiles.png');
+        brick.body.bounce.set(1);
+        brick.body.immovable = true;
+        brick.scale.setTo(brickWidth / brick.width);
+        x += brick.width;
+    }
+}
+
+function createWeaponAnimation() {
+    // create the sprite
+    let star = game.make.sprite(0, 0, 'breakout', '59-Breakout-Tiles.png');
+    star.anchor.setTo(0.5, 0.5);
+    // set the actual star pic
+    let numberOfFrames = 30;
+    let imageSize = 64; // would be nice to read this from the pic itself
+    var bmd = game.add.bitmapData(imageSize * numberOfFrames, imageSize);
+    for (let i = 0; i < numberOfFrames; i ++) {
+        // we position the center of the sprite, as this is the anchor
+        bmd.draw(star, i * imageSize + imageSize / 2, imageSize / 2, imageSize, imageSize);
+        star.rotation = Math.PI * 2 * i / numberOfFrames;
+    }
+    game.cache.addSpriteSheet('star', '', bmd.canvas, imageSize, imageSize, numberOfFrames, 0, 0);
 }
 
 function startBall() {
@@ -59,10 +97,19 @@ function update () {
     pad.x = Math.max(Math.min(game.input.x, game.world.width - pad.width / 2), pad.width / 2);
 
     game.physics.arcade.collide(ball, pad, reflectBall, null, this);
+    game.physics.arcade.collide(ball, bricks, (ball, brick) => {killBrick(brick);}, null, this);
+    game.physics.arcade.collide(
+        weapon.bullets,
+        bricks,
+        function(bullet, brick) {
+            bullet.kill();
+            killBrick(brick);
+        }
+    );
 }
 
 function render() {
-    game.debug.spriteInfo(pad, 0, 0);
+    // game.debug.spriteInfo(pad, 0, 0);
 }
 
 function reflectBall(ball, pad) {
@@ -89,4 +136,10 @@ function reflectBall(ball, pad) {
     }
 
     return false;
+}
+
+function killBrick(brick) {
+    brick.destroy();
+
+    return true;
 }
