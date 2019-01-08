@@ -28,12 +28,12 @@ function create() {
 
     createWeaponAnimation();
     weapon = game.add.weapon(-1, 'star');
+    weapon.addBulletAnimation('rotate-star', null, 30, true);
     weapon.bulletKillType = Phaser.Weapon.KILL_WORLD_BOUNDS;
     weapon.bulletSpeed = 600;
     weapon.fireRate = 100;
     weapon.fireAngle = Phaser.ANGLE_UP;
     weapon.trackSprite(pad, 0, 0, false);
-    weapon.addBulletAnimation('rotate-star', null, 30, true);
 
     game.input.activePointer.leftButton.onDown.add(() => {weapon.fire()});
     game.input.activePointer.middleButton.onDown.add(startBall);
