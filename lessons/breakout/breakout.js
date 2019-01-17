@@ -33,6 +33,7 @@ function myCreateFunction() {
     pad.body.immovable = true;
 
     spaceKey = game.input.keyboard.addKey(Phaser.KeyCode.SPACEBAR);
+    spaceKey.onDown.add(startBall);
 
     // добавяме тухлички
     var countBricks = 12;
@@ -45,13 +46,19 @@ function myCreateFunction() {
     }
 }
 
+var bricks = [];
+
 function createBrick(x, width) {
     var brick = game.add.sprite(x, 0, 'breakout', '01-Breakout-Tiles.png');
     brick.height = brick.height * width / brick.width;
     brick.width = width;
+    game.physics.enable(brick, Phaser.Physics.ARCADE);
+    brick.body.immovable = true;
+    bricks.push(brick);
 }
 
 var ball;
+var points = 0;
 
 function myUpdateFunction() {
     var xmin = pad.width / 2;
@@ -61,30 +68,29 @@ function myUpdateFunction() {
         newX = xmin;
     }
     if (newX > xmax) {
-        newX = xmax;
+        newX = xmax;    
     }
     pad.x = newX;
 
-    if (spaceKey.isDown) {
-        if (ball == undefined) {
-            ball = game.add.sprite(0, 0, 'breakout', '58-Breakout-Tiles.png');
-            ball.anchor.x = 0.5;
-            ball.x = pad.x;
-            ball.y = pad.y - ball.height;
-            game.physics.enable(ball, Phaser.Physics.ARCADE);
-            ball.body.velocity.y = -500;
-            ball.body.velocity.x = -80;
-            ball.body.collideWorldBounds = true;
-            ball.body.bounce.set(1);
-
-            // ball dies when reaches bottom
-            // game.physics.arcade.checkCollision.down = false;
-            // ball.checkWorldBounds = true;
-            // ball.events.onOutOfBounds.add(()=>{console.log('TODO: finish')}, this);
-        }
-    }
-
     game.physics.arcade.collide(ball, pad, reflectBallFromPad, null, this);
+    // for (let i = 0; i < bricks.length; i ++) {
+        // game.physics.arcade.collide(ball, bricks[i], ballHitBrick);
+    // }    
+    game.physics.arcade.collide(ball, bricks, ballHitBrick);
+}
+
+function startBall() {
+    if (ball) return;
+
+    ball = game.add.sprite(0, 0, 'breakout', '58-Breakout-Tiles.png');
+    ball.anchor.x = 0.5;
+    ball.x = pad.x;
+    ball.y = pad.y - ball.height;
+    game.physics.enable(ball, Phaser.Physics.ARCADE);
+    ball.body.velocity.y = -500;
+    ball.body.velocity.x = -80;
+    ball.body.collideWorldBounds = true;
+    ball.body.bounce.set(1);
 }
 
 function reflectBallFromPad(ball, pad) {
@@ -96,4 +102,8 @@ function reflectBallFromPad(ball, pad) {
     y2 = - Math.sqrt(x1*x1 + y1*y1 - x2*x2);
     ball.body.velocity.x = x2;
     ball.body.velocity.y = y2;
+}
+
+function ballHitBrick(ball, brick) {
+    brick.destroy();
 }
