@@ -13,7 +13,10 @@ var game = new Phaser.Game(
         create: myCreateFunction,
         update: myUpdateFunction,
         render: () => {
-            //game.debug.text("hello world!", 10, 20);                
+            //game.debug.text("hello world!", 10, 20);
+            if (ball) {
+                game.debug.bodyInfo(ball, 100, 100);
+            }            
         }
     }
 );
@@ -73,17 +76,20 @@ function myUpdateFunction() {
     pad.x = newX;
 
     game.physics.arcade.collide(ball, pad, reflectBallFromPad, null, this);
-    // for (let i = 0; i < bricks.length; i ++) {
-        // game.physics.arcade.collide(ball, bricks[i], ballHitBrick);
-    // }    
+    
     game.physics.arcade.collide(ball, bricks, ballHitBrick);
+
+    if (ball) {
+        ball.angle = ball.angle + 4;
+    }
 }
 
 function startBall() {
     if (ball) return;
 
-    ball = game.add.sprite(0, 0, 'breakout', '58-Breakout-Tiles.png');
+    ball = game.add.sprite(0, 0, 'breakout', '59-Breakout-Tiles.png');
     ball.anchor.x = 0.5;
+    ball.anchor.y = 0.5;
     ball.x = pad.x;
     ball.y = pad.y - ball.height;
     game.physics.enable(ball, Phaser.Physics.ARCADE);
