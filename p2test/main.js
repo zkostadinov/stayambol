@@ -28,6 +28,10 @@ function myCreateFunction() {
 
     // KEEP SPRITES SMALL
     game.physics.startSystem(Phaser.Physics.P2JS);
+    //  Turn on impact events for the world, without this we get no collision callbacks
+    game.physics.p2.setImpactEvents(true);
+    //game.physics.p2.restitution = 0.8;
+
     game.physics.p2.gravity.x = 0;
     game.physics.p2.gravity.y = 0;
 
@@ -43,10 +47,24 @@ function myCreateFunction() {
     game.physics.p2.enable(ball, false);
     ball.body.clearShapes();
     ball.body.loadPolygon("physics", "pad");
-    ball.body.data.gravityScale = 0;
     ball.body.velocity.x = -400;
+
+    let collisionGroup = game.physics.p2.createCollisionGroup();
+    game.physics.p2.updateBoundsCollisionGroup();
+    pad.body.setCollisionGroup(collisionGroup);
+    ball.body.setCollisionGroup(collisionGroup);
+    ball.body.collides(collisionGroup);
+    pad.body.collides(collisionGroup, hit);
+
+    // TODO detect goals using large sprites
 }
 
 function myUpdateFunction() {
 
+}
+
+function hit(ball) {
+    alert('hitWorldBounds');
+    ball.body.velocity.x = 0;
+    ball.body.velocity.y = 0;
 }
