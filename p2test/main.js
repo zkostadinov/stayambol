@@ -16,7 +16,7 @@ var game = new Phaser.Game(
         create: myCreateFunction,
         update: myUpdateFunction,
         render: () => {
-            game.debug.text(pad.body.data, 10, 20);
+            game.debug.text(pad.body.velocity.y, 10, 20);
             // if (pad) {
             //     game.debug.spriteInfo(pad, 100, 100);
             // }
@@ -25,25 +25,26 @@ var game = new Phaser.Game(
 );
 
 function myCreateFunction() {
-    game.stage.backgroundColor = "#ff00ff";
-    pad = game.add.sprite(0, 0, 'pad');
-    pad.x = pad.width / 2;
-    pad.y = pad.height / 2;
-    ball = game.add.sprite(200, 200, 'ball');
-    ball.scale.setTo(0.1, 0.1);
 
+    // KEEP SPRITES SMALL
     game.physics.startSystem(Phaser.Physics.P2JS);
     game.physics.p2.gravity.x = 0;
     game.physics.p2.gravity.y = 0;
+
+    game.stage.backgroundColor = "#ff00ff";
+    pad = game.add.sprite(100, 100, 'pad');
  
     game.physics.p2.enable(pad, false);
     pad.body.clearShapes();
     pad.body.loadPolygon("physics", "pad");
-    pad.body.data.gravityScale = 0;
+    pad.body.static = true;
 
+    ball = game.add.sprite(500, 100, 'pad');
     game.physics.p2.enable(ball, false);
+    ball.body.clearShapes();
+    ball.body.loadPolygon("physics", "pad");
     ball.body.data.gravityScale = 0;
-    ball.body.velocity.x = -100;
+    ball.body.velocity.x = -400;
 }
 
 function myUpdateFunction() {
