@@ -54,7 +54,7 @@ function myCreateFunction() {
     pad.body.setCollisionGroup(collisionGroup);
     ball.body.setCollisionGroup(collisionGroup);
     ball.body.collides(collisionGroup);
-    pad.body.collides(collisionGroup, hit);
+    pad.body.collides(collisionGroup);
 
     // TODO detect goals using large sprites
 }
