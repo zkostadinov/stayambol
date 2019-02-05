@@ -29,7 +29,7 @@ function create() {
     // The bullet will be automatically killed when it leaves the world bounds
     weapon.bulletKillType = Phaser.Weapon.KILL_WORLD_BOUNDS;
     // скорост на куршума
-    weapon.bulletSpeed = 600;
+    weapon.bulletSpeed = 120;
     // скорост на стрелбата
     weapon.fireRate = 100;
 
@@ -43,8 +43,10 @@ function create() {
 
     spacebar = game.input.keyboard.addKey(Phaser.KeyCode.SPACEBAR);
 
-    // тука е врагът, който да застреляме
+    // тука е врагът, когото да застреляме
     enemy = game.add.sprite(450, 100, 'frames', 29);
+    // пускаме му физиката, иначе няма да засече припокриването
+    // на куршумите на оръжието физиката е включена по подразбиране
     game.physics.enable(enemy, Phaser.Physics.ARCADE);
 }
 
@@ -56,6 +58,13 @@ function update() {
     game.physics.arcade.overlap(weapon.bullets, enemy, killEnemy);
 }
 
-function killEnemy() {
+function killEnemy(enemy, bullet) {
+    console.log(bullet);
+    console.log(enemy);
     enemy.destroy();
+    
+    // тука малко анимация върху куршума
+    let animation = bullet.animations.add('boom', [5, 9, 13], 10, false);
+    bullet.animations.play('boom');
+    animation.onComplete.add(() => {bullet.destroy()});
 }
