@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.2" tiledversion="1.2.2" orientation="orthogonal" renderorder="right-down" width="10" height="20" tilewidth="16" tileheight="16" infinite="0" nextlayerid="3" nextobjectid="10">
- <tileset firstgid="1" source="simples_pimples.tsx"/>
+ <tileset firstgid="1" name="simples_pimples" tilewidth="16" tileheight="16" tilecount="4000" columns="50">
+  <image source="simples_pimples.png" width="800" height="1280"/>
+ </tileset>
  <layer id="1" name="Tile Layer 1" width="10" height="20">
   <data encoding="csv">
 108,108,108,108,108,108,108,108,108,108,
@@ -31,11 +33,6 @@
   <object id="4" gid="928" x="129" y="139" width="16" height="16">
    <properties>
     <property name="type" value="item"/>
-   </properties>
-  </object>
-  <object id="5" gid="2627" x="7" y="304" width="16" height="16">
-   <properties>
-    <property name="type" value="player"/>
    </properties>
   </object>
   <object id="9" gid="1283" x="-0.5" y="79" width="16" height="16">

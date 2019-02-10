@@ -110,8 +110,17 @@
  "tileheight":16,
  "tilesets":[
         {
+         "columns":50,
          "firstgid":1,
-         "source":"simples_pimples.tsx"
+         "image":"simples_pimples.png",
+         "imageheight":1280,
+         "imagewidth":800,
+         "margin":0,
+         "name":"simples_pimples",
+         "spacing":0,
+         "tilecount":4000,
+         "tileheight":16,
+         "tilewidth":16
         }],
  "tilewidth":16,
  "type":"map",
