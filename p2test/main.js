@@ -49,12 +49,14 @@ function myCreateFunction() {
     ball.body.loadPolygon("physics", "pad");
     ball.body.velocity.x = -400;
 
-    let collisionGroup = game.physics.p2.createCollisionGroup();
-    game.physics.p2.updateBoundsCollisionGroup();
-    pad.body.setCollisionGroup(collisionGroup);
-    ball.body.setCollisionGroup(collisionGroup);
-    ball.body.collides(collisionGroup);
-    pad.body.collides(collisionGroup);
+    // let collisionGroup = game.physics.p2.createCollisionGroup();
+    // game.physics.p2.updateBoundsCollisionGroup();
+    // pad.body.setCollisionGroup(collisionGroup);
+    // ball.body.setCollisionGroup(collisionGroup);
+    // ball.body.collides(collisionGroup);
+    // pad.body.collides(collisionGroup);
+
+    console.log("asdfads");
 
     // TODO detect goals using large sprites
 }
