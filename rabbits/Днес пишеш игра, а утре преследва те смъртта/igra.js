@@ -58,7 +58,10 @@ function myCreateFunction() {
 
     CreateBomb();    
 
-	let collisionGroup = game.physics.p2.createCollisionGroup();
+    let collisionGroup = game.physics.p2.createCollisionGroup();
+    // по подразбиране всичко е в една група
+    // ако направим друга, трябва да накараме физиката да си създаде наново
+    // game.physics.p2.boundsCollisionGroup и после да се сблъскваме с него
     game.physics.p2.updateBoundsCollisionGroup();
     Bunny.body.setCollisionGroup(collisionGroup);
     Lola.body.setCollisionGroup(collisionGroup);
