@@ -1,0 +1,14 @@
+{ "columns":128,
+ "image":"..\/breakout\/Breakout_Tile_Free.png",
+ "imageheight":1024,
+ "imagewidth":2048,
+ "margin":0,
+ "name":"Breakout_Tile_Free",
+ "spacing":0,
+ "tilecount":8192,
+ "tiledversion":"1.2.2",
+ "tileheight":16,
+ "tilewidth":16,
+ "type":"tileset",
+ "version":1.2
+}

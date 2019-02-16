@@ -19,14 +19,14 @@ var game = new Phaser.Game(
         create: myCreateFunction,
         update: myUpdateFunction,
         render: () => {
-            game.debug.bodyInfo(Bunny, 100, 100);
+            game.debug.spriteInfo(Bunny, 100, 100);
         }
     }
 );
 
 function myCreateFunction() {        
 				
-	game.stage.backgroundColor='#FFC0CB';
+	game.stage.backgroundColor='#222222';
 	game.physics.startSystem(Phaser.Physics.P2JS);
 	game.physics.p2.setImpactEvents(true);
 	game.physics.p2.gravity.x = 0;
@@ -39,18 +39,17 @@ function myCreateFunction() {
 	game.physics.p2.enable(Bunny, false);
     Bunny.body.clearShapes();
     Bunny.body.loadPolygon("physics", "Bunny");
-	Bunny.scale.setTo(0.25,0.25);
-	// Bunny.body.collideWorldBounds = true;
+    Bunny.scale.setTo(0.25,0.25);
+    // сблъсъкът с границите на света трябваше да се изключи
+    Bunny.body.collideWorldBounds = false;
+    
+    Lola = game.add.sprite(200,100,'Lola');
+	game.physics.p2.enable(Lola, false);
+    Lola.body.clearShapes();
+    Lola.body.loadPolygon("physics", "Lola");
+    Lola.scale.setTo(0.25,0.25);
+	Lola.body.collideWorldBounds = false;
 	
-	
-	
-	/*
-	Lola = game.add.sprite(300,320,'Lola',1);
-	Lola.scale.setTo(0.3,0.3);
-	
-	Lola.anchor.x = 0.5;
-	Lola.anchor.y = 0.5;
-	*/
     keyUp = game.input.keyboard.addKey(Phaser.KeyCode.UP);
     keyDown = game.input.keyboard.addKey(Phaser.KeyCode.DOWN);
     keyW = game.input.keyboard.addKey(Phaser.KeyCode.W);
@@ -74,23 +73,23 @@ function myCreateFunction() {
 
 
 function myUpdateFunction() {
-	var speed=600;
+	var speed=15;
     
+    // трябва да местин директно body-то, а не спрайта
+    // Лола сме я ограничили до границите на света
 	if (keyW.isDown) {
-       Lola.body.velocity.x = 0;
-       Lola.body.velocity.y = -speed;
+        Lola.body.y = Math.max(Lola.body.y - speed, 
+            game.world.y + Lola.height / 2);
     }
     if (keyS.isDown) {
-       Lola.body.velocity.x = 0;
-       Lola.body.velocity.y = speed;
+        Lola.body.y = Math.min(Lola.body.y + speed, 
+            game.world.bounds.bottom - Lola.height / 2);
     }
 	if (keyUp.isDown) {
-       Bunny.body.velocity.x = 0;
-       Bunny.body.velocity.y = -speed;
+        Bunny.body.y = Bunny.body.y - speed;
     }
     if (keyDown.isDown) {
-       Bunny.body.velocity.x = 0;
-       Bunny.body.velocity.y = speed;
+        Bunny.body.y = Bunny.body.y + speed;
     }
 	
 }

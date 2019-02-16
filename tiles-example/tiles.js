@@ -32,17 +32,19 @@ function create() {
     map.addTilesetImage('simples_pimples', 'tiles');
     // добавяме единия слой с картинки
     layer = map.createLayer('Tile Layer 1');
-
+    zelenSloj = map.createLayer('zeleni bokluci');
+    
     // казваме на обектите да се блъскат в нашите спрайтове
     // map.setCollision(108);
-    map.setCollision(201);
-    map.setCollision(251);
+    map.setCollisionBetween(200, 300);
+    map.setCollision(453, true, zelenSloj);
 
     cursors = game.input.keyboard.createCursorKeys();
 
     player = game.add.sprite(32, 32, 'player');
     player.scale.setTo(0.1, 0.1);
     game.physics.enable(player);
+    player.body.collideWorldBounds = true;
 
     // включваме някаква гравитация за играта
     game.physics.arcade.gravity.y = 250;
@@ -51,6 +53,7 @@ function create() {
 function update() {
     // играчът да се сблъсква с нашия слой
     game.physics.arcade.collide(player, layer);
+    game.physics.arcade.collide(player, zelenSloj);
 
     // малко да го раздвижим
 
