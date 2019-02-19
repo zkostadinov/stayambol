@@ -60,6 +60,8 @@ function create() {
 
     // включваме някаква гравитация за играта
     game.physics.arcade.gravity.y = 250;
+
+    createBlankSprite();
 }
 
 function update() {
@@ -85,4 +87,16 @@ function update() {
     {
         player.body.velocity.x = 150;
     }
+}
+
+function createBlankSprite() {
+    // blank sprite will add last used texture
+    var sprite = game.add.sprite(10,10)
+    var g = new Phaser.Graphics(game, 0,0)
+
+    g.beginFill(0xFF0000,0.5)
+    g.drawRect(0,0,100,100)
+    g.endFill()
+    
+    sprite.addChild(g)
 }
