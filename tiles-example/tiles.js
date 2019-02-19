@@ -10,7 +10,8 @@ var game = new Phaser.Game(
         preload: () => {
             // зареждаме картата
             game.load.tilemap('map', 'map.json', null, Phaser.Tilemap.TILED_JSON);
-            game.load.image('tiles', 'simples_pimples.png');
+            // game.load.image('tiles', 'simples_pimples.png');
+            game.load.spritesheet('tiles', 'simples_pimples.png', 16, 16);
             game.load.image('player', '../test/assets/images/mushroom.png');
         },
         // вика се при стартиране на играта
@@ -32,12 +33,23 @@ function create() {
     map.addTilesetImage('simples_pimples', 'tiles');
     // добавяме единия слой с картинки
     layer = map.createLayer('Tile Layer 1');
-    zelenSloj = map.createLayer('zeleni bokluci');
     
     // казваме на обектите да се блъскат в нашите спрайтове
     // map.setCollision(108);
     map.setCollisionBetween(200, 300);
-    map.setCollision(453, true, zelenSloj);
+
+    food = game.add.group();
+    // food.enableBody = true;
+    map.createFromObjects('Object Layer 1', 928, 'tiles', 927, true, false, food);
+    map.createFromObjects('Object Layer 1', 1283, 'tiles', 1282, true, false, food);
+    food.forEach((круша) => {
+        game.physics.enable(круша);
+        круша.body.immovable = true;
+        круша.body.allowGravity = false;
+    });
+
+    // objects = map.createLayer('Object Layer 1');
+    // map.createFromTiles(928, null, 'tiles', objects, food);
 
     cursors = game.input.keyboard.createCursorKeys();
 
@@ -53,8 +65,8 @@ function create() {
 function update() {
     // играчът да се сблъсква с нашия слой
     game.physics.arcade.collide(player, layer);
-    game.physics.arcade.collide(player, zelenSloj);
-
+    game.physics.arcade.collide(player, food, (p, f) => {f.destroy();});
+    
     // малко да го раздвижим
 
     if (cursors.up.isDown)
