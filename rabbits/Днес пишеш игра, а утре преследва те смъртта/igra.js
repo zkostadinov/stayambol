@@ -99,7 +99,11 @@ function myUpdateFunction() {
     if (keyDown.isDown) {
         Bunny.body.y = Bunny.body.y + speed;
     }
-	
+    
+    if (Bomb != undefined) {
+        Bomb.body.velocity.x = Math.sign(Bomb.body.velocity.x) * 150;
+        Bomb.body.velocity.y = Math.sign(Bomb.body.velocity.y) * 100;
+    }
 }
 
 function CreateBomb(){
@@ -121,6 +125,7 @@ function setContactMatherials() {
     var spriteMaterial = game.physics.p2.createMaterial('spriteMaterial', Bomb.body);
     Bunny.body.setMaterial(spriteMaterial);
     Lola.body.setMaterial(spriteMaterial);
+    Bomb.body.setMaterial(spriteMaterial);
 
     var worldMaterial = game.physics.p2.createMaterial('worldMaterial');
 
@@ -130,7 +135,7 @@ function setContactMatherials() {
     //  Here is the contact material. It's a combination of 2 materials, so whenever shapes with
     //  those 2 materials collide it uses the following settings.
     //  A single material can be used by as many different sprites as you like.
-    var contactMaterial = game.physics.p2.createContactMaterial(spriteMaterial, worldMaterial);
+    var contactMaterial = game.physics.p2.createContactMaterial(spriteMaterial, spriteMaterial);
 
     contactMaterial.friction = 0.3;     // Friction to use in the contact of these two materials.
     contactMaterial.restitution = 1.0;  // Restitution (i.e. how bouncy it is!) to use in the contact of these two materials.
