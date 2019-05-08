@@ -23,13 +23,26 @@ class GameClientHandler extends Thread {
     private final Socket socket;
     private final Point location;
 
-    public GameClientHandler(Socket socket, Point location) {
+    GameClientHandler(Socket socket, Point location) {
         this.socket = socket;
         this.location = location;
     }
 
-    @Override
-    public void run() {
+    public void sample_run() {
+//        Sample output:
+//        Accepting clients...
+//        Reading:
+//        GET / HTTP/1.1
+//        Host: localhost:8000
+//        Connection: keep-alive
+//        Origin: null
+//        User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.131 Safari/537.36
+//        Accept: */*
+//        Accept-Encoding: gzip, deflate, br
+//        Accept-Language: en-US,en;q=0.9,bg;q=0.8
+//
+//        Finished reading, sending response.
+
         System.out.println("Reading:");
         try {
             final Scanner s = new Scanner(socket.getInputStream());
@@ -38,6 +51,8 @@ class GameClientHandler extends Thread {
                 line = s.nextLine();
                 System.out.println(line);
             } while (!line.isEmpty());
+            System.out.println(s.nextLine());
+
             System.out.println("Finished reading, sending response.");
             OutputStream os = socket.getOutputStream();
             os.write(("HTTP/1.x 200 OK\n" +
@@ -51,23 +66,77 @@ class GameClientHandler extends Thread {
         }
     }
 
-    public void mun() throws IOException {
-        final String commandLine = new Scanner(socket.getInputStream()).nextLine();
+    @Override
+    public void run() {
+        try {
+            System.out.println("Received client...");
+//            sample_run();
+            actualProcessing();
+            System.out.println("Client processed.");
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                socket.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void actualProcessing() throws IOException {
+
+        final String headers = "HTTP/1.x 200 OK\n" +
+                "Access-Control-Allow-Origin: *\n" +
+                "Content-Type: text/plain\n\n";
+
+        Scanner s = new Scanner(socket.getInputStream());
+        final String commandLine = s.nextLine();
+        System.out.println("Received command: " + commandLine);
         final String[] command = commandLine.split(" ");
         final String spec = command[0];
         final String params = command[1];
         switch (spec) {
+
             case "GET":
-                final String locationAsString = location.x + "/" + location.y;
+                // send the headers
                 OutputStream os = socket.getOutputStream();
+                os.write(headers.getBytes());
+
+                // send the content
+                final String locationAsString = location.x + "/" + location.y;
                 os.write(locationAsString.getBytes());
+
+                // flush everything
                 os.flush();
                 break;
-            case "PUT":
-                final String locationFromString = new Scanner(socket.getInputStream()).nextLine();
-                final String[] xys = locationFromString.split("/");
+
+            case "POST":
+                // read until empty line
+                String line;
+                do {
+                    line = s.nextLine();
+                    System.out.println(line);
+                } while (!line.isEmpty());
+
+                // next line contains our actual content
+                line = s.nextLine();
+                final String[] xys = line.split("/");
                 location.x = Integer.parseInt(xys[0]);
                 location.y = Integer.parseInt(xys[1]);
+                System.out.println("Location set to " + location);
+
+                // close the socket
+                socket.getOutputStream().write(headers.getBytes());
+                socket.getOutputStream().flush();
+                break;
+
+            default:
+                // unknown http method - report bad request
+                socket.getOutputStream().write(("HTTP/1.x 403 Bad Request\n" +
+                        "Access-Control-Allow-Origin: *\n" +
+                        "Content-Type: text/plain\n\n").getBytes());
+                socket.getOutputStream().flush();
         }
     }
 }
