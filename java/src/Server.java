@@ -1,6 +1,7 @@
 import java.net.Socket;
 import java.net.ServerSocket;
 import java.io.*;
+import java.util.LinkedList;
 
 class Server {
     public static void main(String[] args) throws Exception {
@@ -10,6 +11,7 @@ class Server {
         while(true) {
             System.out.println("Listening to client...");
             final Socket s = server.accept();
+            final java.util.List clients = new LinkedList();
 
             Thread t = new Thread(){
                 public void run() {
@@ -37,8 +39,11 @@ class Server {
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
+
+                    clients.remove(this);
                 }
             };
+            clients.add(t);
             t.start();
 
         }
