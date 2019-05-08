@@ -122,8 +122,8 @@ class GameClientHandler extends Thread {
                 // next line contains our actual content
                 line = s.nextLine();
                 final String[] xys = line.split("/");
-                location.x = Integer.parseInt(xys[0]);
-                location.y = Integer.parseInt(xys[1]);
+                location.x = Math.round(Float.parseFloat(xys[0]));
+                location.y = Math.round(Float.parseFloat(xys[1]));
                 System.out.println("Location set to " + location);
 
                 // close the socket

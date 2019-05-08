@@ -61,6 +61,8 @@ function create() {
     guy.body.bounce.setTo(1, 1);
 
     cursors = game.input.keyboard.createCursorKeys();
+
+    game.time.events.repeat(Phaser.Timer.SECOND, 10000000, readServer, this);
 }
 
 function update() {
@@ -119,9 +121,19 @@ function update() {
     }
 }
 
+function readServer() {
+    var xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function(p) {
+        s = p.target.responseText.trim();
+        guy.x = parseInt(s.split('/')[0])
+        guy.y = parseInt(s.split('/')[1])
+    };
+    xhr.open('GET', 'http://localhost:8000');
+    xhr.send();
+}
+
 function updateServer() {
     var xhr = new XMLHttpRequest();
-    xhr.onreadystatechange = function(p) {console.log(p)};
     xhr.open('POST', 'http://localhost:8000');
     xhr.setRequestHeader("Content-Type", "text/plain");
     xhr.send(guy.x + '/' + guy.y + '\n');
