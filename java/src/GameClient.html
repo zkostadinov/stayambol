@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Game client</title>
+</head>
+<body>
+<script language="JavaScript">
+    var xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function(p) {console.log(p)};
+    xhr.open('GET', 'http://localhost:8000');
+    xhr.send();
+</script>
+</body>
+</html>
